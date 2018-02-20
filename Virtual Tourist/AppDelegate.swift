@@ -8,13 +8,15 @@
 
 import UIKit
 import CoreData
+import MapKit
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
-
-
+    let userDefaults = UserDefaults.standard
+    var mainMapView: MKMapView?
+    
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         return true
@@ -26,6 +28,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func applicationDidEnterBackground(_ application: UIApplication) {
+        let mapRegionDict = convertRegionToDictionary(region: mainMapView!.region)
+        userDefaults.set(mapRegionDict, forKey: "lastSavedLocation")
         // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
         // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
     }
@@ -44,6 +48,22 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         self.saveContext()
     }
 
+    func convertRegionToDictionary(region: MKCoordinateRegion) -> [String: AnyObject]{
+        let centerDict = [
+            "latitude": region.center.latitude,
+            "longitude": region.center.longitude
+        ]
+        let spanDict = [
+            "latitudeDelta": region.span.latitudeDelta,
+            "longitudeDelta": region.span.longitudeDelta
+        ]
+        var myDictionary: [String: AnyObject] = [:]
+        myDictionary["center"] = centerDict as AnyObject
+        myDictionary["span"] = spanDict as AnyObject
+        
+        return myDictionary
+    }
+    
     // MARK: - Core Data stack
 
     lazy var persistentContainer: NSPersistentContainer = {
