@@ -30,19 +30,36 @@ extension MapViewController: CLLocationManagerDelegate, MKMapViewDelegate {
         
     }
     
-    func startGestureListener(){
-        let gesture = UILongPressGestureRecognizer(target: self, action: #selector(dropPin))
-        mapView.addGestureRecognizer(gesture)
+    
+    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
+        let reuseId = "pin"
+        
+        var pinView = mapView.dequeueReusableAnnotationView(withIdentifier: reuseId) as? MKPinAnnotationView
+        
+        if pinView == nil {
+            pinView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: reuseId)
+            pinView!.canShowCallout = false
+            pinView!.pinTintColor = .red
+            pinView!.rightCalloutAccessoryView = UIButton(type: .detailDisclosure)
+        }
+        else {
+            pinView!.annotation = annotation
+        }
+        
+        return pinView
     }
     
-    @objc func dropPin(gestureRecognizer:UIGestureRecognizer) {
-        let touchPoint = gestureRecognizer.location(in: mapView)
-        let newCoordinates = mapView.convert(touchPoint, toCoordinateFrom: mapView)
-        let annotation = MKPointAnnotation()
-        annotation.coordinate = newCoordinates
-        mapView.addAnnotation(annotation)
+    func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
+        if let annotation = view.annotation{
+            if self.isEditMode {
+            self.mapView.removeAnnotation(annotation)
+            }
+            
+        }
+        
     }
     
+
     func convertDictionaryToRegion(dictionary: [String: AnyObject]) -> MKCoordinateRegion{
         let centerDictionary = dictionary["center"]
         let spanDictionary = dictionary["span"]
@@ -52,4 +69,20 @@ extension MapViewController: CLLocationManagerDelegate, MKMapViewDelegate {
         let region = MKCoordinateRegion(center: center, span: span)
         return region
     }
+    
+    func startGestureListener(){
+        let gesture = UILongPressGestureRecognizer(target: self, action: #selector(dropPin))
+        mapView.addGestureRecognizer(gesture)
+    }
+    
+    @objc func dropPin(gestureRecognizer:UIGestureRecognizer) {
+        if gestureRecognizer.state == .ended {
+        let touchPoint = gestureRecognizer.location(in: mapView)
+        let newCoordinates = mapView.convert(touchPoint, toCoordinateFrom: mapView)
+        let annotation = MKPointAnnotation()
+        annotation.coordinate = newCoordinates
+        mapView.addAnnotation(annotation)
+        }
+    }
+    
 }

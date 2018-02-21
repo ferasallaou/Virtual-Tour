@@ -20,22 +20,44 @@
                         <subviews>
                             <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="VKR-mj-8av">
                                 <rect key="frame" x="0.0" y="64" width="375" height="603"/>
+                                <connections>
+                                    <outlet property="delegate" destination="BYZ-38-t0r" id="Vxq-1M-rfF"/>
+                                </connections>
                             </mapView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Tap on Pin To Delete it" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Fea-i8-gjA">
+                                <rect key="frame" x="0.0" y="667" width="375" height="75"/>
+                                <color key="backgroundColor" red="1" green="0.16841727275063256" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <color key="tintColor" red="1" green="0.0" blue="0.14079212079847458" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="75" id="w6l-Bh-c8k"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="VKR-mj-8av" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="5Yj-Wi-U3m"/>
                             <constraint firstItem="VKR-mj-8av" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="ZTW-uG-Qfp"/>
+                            <constraint firstItem="Fea-i8-gjA" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="ffI-Qk-ZwB"/>
+                            <constraint firstItem="Fea-i8-gjA" firstAttribute="top" secondItem="VKR-mj-8av" secondAttribute="bottom" id="jgE-s8-NUa"/>
                             <constraint firstItem="VKR-mj-8av" firstAttribute="bottom" secondItem="6Tk-OE-BBY" secondAttribute="bottom" id="lGv-2I-6fq"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="Fea-i8-gjA" secondAttribute="trailing" id="lL4-Pg-155"/>
                             <constraint firstItem="VKR-mj-8av" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="qAr-hQ-W4Y"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
                     <navigationItem key="navigationItem" id="YWr-Km-a4L">
-                        <barButtonItem key="rightBarButtonItem" title="Edit" id="dZg-T0-2nN"/>
+                        <barButtonItem key="rightBarButtonItem" systemItem="edit" id="dZg-T0-2nN">
+                            <connections>
+                                <action selector="editMapViewBtn:" destination="BYZ-38-t0r" id="6ii-A4-rQZ"/>
+                            </connections>
+                        </barButtonItem>
                     </navigationItem>
                     <connections>
-                        <outlet property="editMapViewBtn" destination="dZg-T0-2nN" id="kNc-NK-Wqh"/>
+                        <outlet property="editBtn" destination="dZg-T0-2nN" id="fEs-tY-WTm"/>
+                        <outlet property="editModeLable" destination="Fea-i8-gjA" id="YGd-S3-HN5"/>
                         <outlet property="mapView" destination="VKR-mj-8av" id="BMT-2W-lfz"/>
                     </connections>
                 </viewController>

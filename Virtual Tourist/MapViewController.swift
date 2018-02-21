@@ -11,25 +11,44 @@ import MapKit
 
 class MapViewController: UIViewController {
 
+    @IBOutlet weak var editModeLable: UILabel!
+    @IBOutlet weak var editBtn: UIBarButtonItem!
     @IBOutlet weak var mapView: MKMapView!
+    
     let locationManager = CLLocationManager()
     var userLocation: CLLocationCoordinate2D? = nil
     let appDelegate = UIApplication.shared.delegate as! AppDelegate
-    
+    var isEditMode: Bool = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         title = "Virtual Tourist"
         getUserLocation()
         startGestureListener()
         appDelegate.mainMapView = self.mapView
-//        let lastSavedLocation = appDelegate.userDefaults.value(forKey: "lastSavedLocation")
         
     }
     
-    @IBOutlet weak var editMapViewBtn: UIBarButtonItem!
-
+    @IBAction func editMapViewBtn(_ sender: Any) {
+        if isEditMode {
+            isEditMode = false
+            self.editBtn.title = "Edit"
+            UIView.animate(withDuration: 0.5, animations:{
+              self.mapView.layer.position.y += 75
+              self.editModeLable.layer.position.y += 75
+            })
+            
+        }else{
+            isEditMode = true
+            self.editBtn.title = "Done"
+            UIView.animate(withDuration: 0.5, animations:{
+                self.mapView.layer.position.y -= 75
+                self.editModeLable.layer.position.y -= 75
+            })
+            
+        }
+        
+    }
     
     func getUserLocation() {
         if let savedLocation = appDelegate.userDefaults.value(forKey: "lastSavedLocation") {
@@ -52,6 +71,7 @@ class MapViewController: UIViewController {
         
     }
     
+
 
 }
 
