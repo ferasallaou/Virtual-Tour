@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		E01936B6203EBB140062536C /* dataController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E01936B5203EBB140062536C /* dataController.swift */; };
+		E06589AC203F07A8002BA762 /* flickrClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = E06589AB203F07A8002BA762 /* flickrClient.swift */; };
 		E089D1AE203EC91400255735 /* AlbumViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E089D1AD203EC91400255735 /* AlbumViewController.swift */; };
 		E0A2DE18203C166F006525DE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0A2DE17203C166F006525DE /* AppDelegate.swift */; };
 		E0A2DE1A203C166F006525DE /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0A2DE19203C166F006525DE /* MapViewController.swift */; };
@@ -20,6 +21,7 @@
 
 /* Begin PBXFileReference section */
 		E01936B5203EBB140062536C /* dataController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = dataController.swift; sourceTree = "<group>"; };
+		E06589AB203F07A8002BA762 /* flickrClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = flickrClient.swift; sourceTree = "<group>"; };
 		E089D1AD203EC91400255735 /* AlbumViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumViewController.swift; sourceTree = "<group>"; };
 		E0A2DE14203C166F006525DE /* Virtual Tourist.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Virtual Tourist.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E0A2DE17203C166F006525DE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -80,6 +82,7 @@
 				E0A2DE23203C166F006525DE /* LaunchScreen.storyboard */,
 				E0A2DE26203C166F006525DE /* Info.plist */,
 				E089D1AD203EC91400255735 /* AlbumViewController.swift */,
+				E06589AB203F07A8002BA762 /* flickrClient.swift */,
 			);
 			path = "Virtual Tourist";
 			sourceTree = "<group>";
@@ -160,6 +163,7 @@
 				E01936B6203EBB140062536C /* dataController.swift in Sources */,
 				E0A2DE1A203C166F006525DE /* MapViewController.swift in Sources */,
 				E0A2DE20203C166F006525DE /* Virtual_Tourist.xcdatamodeld in Sources */,
+				E06589AC203F07A8002BA762 /* flickrClient.swift in Sources */,
 				E0A2DE18203C166F006525DE /* AppDelegate.swift in Sources */,
 				E0A2DE2D203C1A5B006525DE /* MapViewController+Extension.swift in Sources */,
 			);

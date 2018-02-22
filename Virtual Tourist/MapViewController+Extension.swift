@@ -51,7 +51,7 @@ extension MapViewController: CLLocationManagerDelegate, MKMapViewDelegate {
     }
     
     func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
-        
+        print(view.annotation?.coordinate)
         if let annotation = view.annotation{
             if self.isEditMode {
                 let annotationId = annotation.title!
