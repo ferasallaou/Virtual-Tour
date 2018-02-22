@@ -40,6 +40,7 @@ extension MapViewController: CLLocationManagerDelegate, MKMapViewDelegate {
             pinView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: reuseId)
             pinView!.canShowCallout = false
             pinView!.pinTintColor = .red
+            pinView!.animatesDrop = true
             pinView!.rightCalloutAccessoryView = UIButton(type: .detailDisclosure)
         }
         else {
@@ -50,6 +51,7 @@ extension MapViewController: CLLocationManagerDelegate, MKMapViewDelegate {
     }
     
     func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
+        print(isEditMode)
         if let annotation = view.annotation{
             if self.isEditMode {
             self.mapView.removeAnnotation(annotation)
@@ -76,7 +78,7 @@ extension MapViewController: CLLocationManagerDelegate, MKMapViewDelegate {
     }
     
     @objc func dropPin(gestureRecognizer:UIGestureRecognizer) {
-        if gestureRecognizer.state == .ended {
+        if gestureRecognizer.state == .began {
         let touchPoint = gestureRecognizer.location(in: mapView)
         let newCoordinates = mapView.convert(touchPoint, toCoordinateFrom: mapView)
         let annotation = MKPointAnnotation()
