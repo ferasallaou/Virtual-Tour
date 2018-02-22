@@ -51,10 +51,15 @@ extension MapViewController: CLLocationManagerDelegate, MKMapViewDelegate {
     }
     
     func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
-        print(isEditMode)
+        
         if let annotation = view.annotation{
             if self.isEditMode {
+                let annotationId = annotation.title!
+            dataController.deleteFrom(entityName: "Albums", fetchFormat: "albumId == \(annotationId!)")
             self.mapView.removeAnnotation(annotation)
+            }else{
+                let albumVC = self.storyboard?.instantiateViewController(withIdentifier: "albumVC") as! AlbumViewController
+                self.navigationController?.pushViewController(albumVC, animated: true)
             }
             
         }
@@ -81,10 +86,18 @@ extension MapViewController: CLLocationManagerDelegate, MKMapViewDelegate {
         if gestureRecognizer.state == .began {
         let touchPoint = gestureRecognizer.location(in: mapView)
         let newCoordinates = mapView.convert(touchPoint, toCoordinateFrom: mapView)
+
         let annotation = MKPointAnnotation()
         annotation.coordinate = newCoordinates
-        mapView.addAnnotation(annotation)
+        annotation.title = "\(Int(Date().timeIntervalSince1970))"
+            let albumId = Int(annotation.title!)
+            dataController.getEntity(entityNamae: "Albums")
+            let parameters = ["albumId": albumId! as AnyObject]
+            dataController.save(parameters: parameters)
+            mapView.addAnnotation(annotation)
         }
     }
+    
+    
     
 }

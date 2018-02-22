@@ -49,7 +49,12 @@
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
                     <navigationItem key="navigationItem" id="YWr-Km-a4L">
-                        <barButtonItem key="rightBarButtonItem" systemItem="edit" id="dZg-T0-2nN">
+                        <barButtonItem key="leftBarButtonItem" title="Item" id="bkM-mU-3Ul">
+                            <connections>
+                                <action selector="testing:" destination="BYZ-38-t0r" id="Tps-hY-bSD"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" title="Edit" id="dZg-T0-2nN">
                             <connections>
                                 <action selector="editMapViewBtn:" destination="BYZ-38-t0r" id="6ii-A4-rQZ"/>
                             </connections>
@@ -64,6 +69,30 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="647" y="133"/>
+        </scene>
+        <!--Album View Controller-->
+        <scene sceneID="3qF-qc-lAy">
+            <objects>
+                <viewController storyboardIdentifier="albumVC" id="GMs-ti-G34" customClass="AlbumViewController" customModule="Virtual_Tourist" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="5rz-xp-UMe">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Welcome :) " textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7dC-cU-abx">
+                                <rect key="frame" x="166" y="323" width="42" height="21"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <viewLayoutGuide key="safeArea" id="Hhv-3t-xJo"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Wm9-NR-T8F" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1588" y="133"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="2I1-Tj-Lfa">

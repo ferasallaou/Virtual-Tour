@@ -19,6 +19,7 @@ class MapViewController: UIViewController {
     var userLocation: CLLocationCoordinate2D? = nil
     let appDelegate = UIApplication.shared.delegate as! AppDelegate
     var isEditMode: Bool = false
+    let dataController = DataController()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -29,6 +30,14 @@ class MapViewController: UIViewController {
         
     }
     
+    @IBAction func testing(_ sender: Any) {
+     let myData = dataController.fetchFrom(entityName: "Albums")
+        print("we have \(myData.count)")
+        for d in myData{
+            let toInt = d.value(forKey: "albumId") as! Int64
+            print(toInt)
+        }
+    }
     @IBAction func editMapViewBtn(_ sender: Any) {
         if isEditMode {
             isEditMode = false
@@ -37,7 +46,6 @@ class MapViewController: UIViewController {
               self.mapView.layer.position.y += 75
               self.editModeLable.layer.position.y += 75
             })
-            
         }else{
             isEditMode = true
             self.editBtn.title = "Done"
