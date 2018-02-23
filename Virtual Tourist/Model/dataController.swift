@@ -40,9 +40,13 @@ class DataController {
         }
     }
     
-    func fetchFrom(entityName: String) -> [NSManagedObject]{
+    func fetchFrom(entityName: String, predicate: String?) -> [NSManagedObject]{
         var data = [NSManagedObject]()
         let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: entityName)
+        if predicate != nil {
+            let newPredicate = NSPredicate(format: "albumId = %@", argumentArray: [predicate])
+            fetchRequest.predicate = newPredicate
+        }
         do{
          data = try managedContext.fetch(fetchRequest)
         }catch{
@@ -59,6 +63,21 @@ class DataController {
                 managedContext.delete(object)
             }
         }
+    }
+    
+    func deleteAll(entityName: String) {
+        let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: entityName)
+        let request = NSBatchDeleteRequest(fetchRequest: fetchRequest as! NSFetchRequest<NSFetchRequestResult>)
+        let result = try? managedContext.execute(request)
+
+        if let result = result {
+            print("OK")
+        }else{
+            
+            print("Nope")
+        }
+
+        
     }
     
 }

@@ -31,28 +31,32 @@ class MapViewController: UIViewController {
     }
     
     @IBAction func testing(_ sender: Any) {
-//     let myData = dataController.fetchFrom(entityName: "Albums")
-//        print("we have \(myData.count)")
-//        for d in myData{
-//            let toInt = d.value(forKey: "albumId") as! Int64
-//            print(toInt)
-//        }
-        
-        let flickrClient = FlickrClient()
-        let params = [
-            "lat": 50.12 as AnyObject,
-            "lon": -86.696 as AnyObject,
-        ]
-        let url = flickrClient.prepareParameters(params: params)
-        flickrClient.makeGetRequest(url: url) {
-            (data, error) in
-            
-            if error != nil {
-                print(error! + "OOps")
-            }else {
-                print("got it \(data)")
-            }
+     let myData = dataController.fetchFrom(entityName: "Albums",predicate:  nil)
+        print("we have \(myData.count)")
+        for d in myData{
+            let toInt = d.value(forKey: "albumId") as! Int64
+            let imageData = d.value(forKey: "snapshot") as? Data
+            print( " \(toInt) thisis data \(imageData)")
         }
+        
+        
+        //dataController.deleteAll(entityName: "Albums")
+        
+//        let flickrClient = FlickrClient()
+//        let params = [
+//            "lat": 48.453 as AnyObject,
+//            "lon": -89.496 as AnyObject,
+//        ]
+//        let url = flickrClient.prepareParameters(params: params)
+//        flickrClient.getPhotos(url: url) {
+//            (data, error) in
+//
+//            if error != nil {
+//                print(error! + "OOps")
+//            }else {
+//                print("got it \(data?.count)")
+//            }
+//        }
     }
     @IBAction func editMapViewBtn(_ sender: Any) {
         if isEditMode {

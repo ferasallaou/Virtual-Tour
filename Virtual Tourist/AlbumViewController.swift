@@ -10,9 +10,13 @@ import UIKit
 
 class AlbumViewController: UIViewController {
 
+    @IBOutlet weak var locationSnapshot: UIImageView!
+    var locationImage =  UIImage()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
+        locationSnapshot.image = locationImage
         // Do any additional setup after loading the view.
     }
 

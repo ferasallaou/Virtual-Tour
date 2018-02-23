@@ -32,6 +32,7 @@ class FlickrClient{
     }
     
     func makeGetRequest(url: String, getRequestCompltionHandler: @escaping ( [String: AnyObject]? , String? ) -> Void ) {
+        
         let mUrl = URL(string: url)
         let request = URLRequest(url: mUrl!)
         
@@ -43,25 +44,84 @@ class FlickrClient{
                 getRequestCompltionHandler(nil, "Got an Error \(String(describing: error?.localizedDescription))")
                 return
             }
-            var flickrResponse = [String: AnyObject]()
-            if let data = data {
-                do {
-
-                    flickrResponse = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as! [String:AnyObject]
-                }catch{
-                getRequestCompltionHandler(nil, "Couldn't get Data1")
-                return
-                }
-            }else{
-                getRequestCompltionHandler(nil, "Couldn't get Data!")
+            
+            
+            guard let data = data else{
+                getRequestCompltionHandler(nil, "Error in Getting photos.")
                 return
             }
-            getRequestCompltionHandler(flickrResponse, nil)
+            
+            
+            var flickrResponse = [String: AnyObject]()
+                do {
+                    flickrResponse = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as! [String:AnyObject]
+                }catch{
+                getRequestCompltionHandler(nil, "Couldn't Parse Data")
+                return
+                }
+            
+            
+            guard let photosDictionary = flickrResponse["photos"] as? [String: AnyObject] else{
+                getRequestCompltionHandler(nil, "Please try again.")
+                return
+            }
+            
+            
+            getRequestCompltionHandler(photosDictionary, nil)
          }
         task.resume()
     }
     
-    
+    func getPhotos(url: String, getPhotosCompletionHandler:  @escaping ([AnyObject]?, String?) -> Void ) {
+        
+        makeGetRequest(url: url) {
+            (response, error) in
+            
+            guard error == nil else {
+                getPhotosCompletionHandler(nil, "Got an error \(error!.debugDescription)")
+                return
+            }
+            
+            if let response = response {
+                let totalPages = response["pages"] as? Int ?? 1
+                let randomPageNumber = Int(arc4random_uniform(UInt32(totalPages)) + 1)
+                
+
+                if randomPageNumber == 1 {
+                    
+                    guard let photoObject = response["photo"] as? [AnyObject] else {
+                        getPhotosCompletionHandler(nil, "There are No Photos!")
+                        return
+                    }
+                    
+                    getPhotosCompletionHandler(photoObject, nil)
+                    
+                }else{
+                   let newUrl = url + "&page=\(randomPageNumber)"
+                    self.makeGetRequest(url: newUrl) {
+                        (newResponse, newError) in
+                        
+                        guard error == nil else {
+                            getPhotosCompletionHandler(nil, "Got an error \(error!.debugDescription)")
+                            return
+                        }
+                        
+                        guard let photoObject = newResponse!["photo"] as? [AnyObject] else {
+                            getPhotosCompletionHandler(nil, "There are No Photos!")
+                            return
+                        }
+                        
+                        getPhotosCompletionHandler(photoObject, nil)
+                        
+                        
+                    }
+                }
+            }
+            
+            
+         }
+        
+    }
     
     
 }
