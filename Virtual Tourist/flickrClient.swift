@@ -19,7 +19,7 @@ class FlickrClient{
         parametes["api_key"] = "ebda1d5af7e68e6adc4b224f820e3847" as AnyObject
         parametes["per_page"] = 15 as AnyObject
         parametes["format"] = "json" as AnyObject
-        parametes["extras"] = "url_m" as AnyObject
+        parametes["extras"] = "url_s" as AnyObject
         parametes["nojsoncallback"] = 1 as AnyObject
         var paramsArr = [String]()
             for (key, value) in parametes{
@@ -39,7 +39,7 @@ class FlickrClient{
         let task = URLSession.shared.dataTask(with: request) {
             (data, response, error) in
             
-
+            
             guard error == nil else {
                 getRequestCompltionHandler(nil, "Got an Error \(String(describing: error?.localizedDescription))")
                 return
@@ -60,6 +60,10 @@ class FlickrClient{
                 return
                 }
             
+            guard let status = flickrResponse["stat"] as? String, status.lowercased() == "ok" else {
+                getRequestCompltionHandler(nil, "Request Stats was not OK")
+                return
+            }
             
             guard let photosDictionary = flickrResponse["photos"] as? [String: AnyObject] else{
                 getRequestCompltionHandler(nil, "Please try again.")

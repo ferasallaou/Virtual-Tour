@@ -26,25 +26,46 @@ class DataController {
     }
     
     
-    func save(parameters:[String: AnyObject]){
-        if !parameters.isEmpty{
-            for (key, value) in parameters {
-                managedObject?.setValue(value, forKey: "\(key)")
+    func save(parameters:[String: AnyObject]?, parameterAsArray: [[String:AnyObject]]?){
+        if parameters != nil {
+            if !parameters!.isEmpty{
+                for (key, value) in parameters! {
+                    managedObject?.setValue(value, forKey: "\(key)")
+                }
+            }
+            
+            do {
+                try  managedContext.save()
+            }catch{
+                fatalError("Couldn't save :( ")
             }
         }
         
-        do {
-            try  managedContext.save()
-        }catch{
-            fatalError("Couldn't save :( ")
+        if parameterAsArray != nil {
+            if !parameterAsArray!.isEmpty {
+                for values in parameterAsArray! {
+                    for (key, value) in values {
+                        managedObject?.setValue(value, forKey: "\(key)")
+                    }
+                }
+            }
+            do {
+                try  managedContext.save()
+                print("SAVED :D ")
+            }catch{
+                fatalError("Couldn't save :( ")
+            }
+            
         }
     }
+    
+    
     
     func fetchFrom(entityName: String, predicate: String?) -> [NSManagedObject]{
         var data = [NSManagedObject]()
         let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: entityName)
         if predicate != nil {
-            let newPredicate = NSPredicate(format: "albumId = %@", argumentArray: [predicate])
+            let newPredicate = NSPredicate(format: "albumId = %@", argumentArray: [predicate!])
             fetchRequest.predicate = newPredicate
         }
         do{
@@ -55,15 +76,20 @@ class DataController {
         return data
     }
     
-    func deleteFrom(entityName: String, fetchFormat: String) {
+    func deleteFrom(entityName: String, fetchFormat: String) -> Bool{
+        print("got the sdelete \(fetchFormat)")
        let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: entityName)
         fetchRequest.predicate = NSPredicate.init(format: fetchFormat)
-        if let results = try? managedContext.fetch(fetchRequest){
-            for object in results {
-                managedContext.delete(object)
+        let request = NSBatchDeleteRequest(fetchRequest: fetchRequest as! NSFetchRequest<NSFetchRequestResult>)
+        let result = try? managedContext.execute(request)
+        
+        if let result = result {
+            return true
+        } else {
+            return false
             }
         }
-    }
+    
     
     func deleteAll(entityName: String) {
         let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: entityName)
@@ -71,7 +97,7 @@ class DataController {
         let result = try? managedContext.execute(request)
 
         if let result = result {
-            print("OK")
+            print("OK \(result)")
         }else{
             
             print("Nope")

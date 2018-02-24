@@ -12,19 +12,33 @@ class AlbumViewController: UIViewController {
 
     @IBOutlet weak var locationSnapshot: UIImageView!
     var locationImage =  UIImage()
+    var albumId: Int64 = 0
+    var latitude: Double = 0
+    var longitude: Double = 0
     
+    let dataController = DataController()
+    let flickrClient = FlickrClient()
+
     override func viewDidLoad() {
         super.viewDidLoad()
         
         locationSnapshot.image = locationImage
+        getSavedPhotosOrFetch(albumId: albumId) 
         // Do any additional setup after loading the view.
     }
 
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
     
+    @IBAction func getNewCollection(_ sender: Any) {
+       //dataController.deleteAll(entityName: "Photos")
+        let checkPhotos = dataController.fetchFrom(entityName: "Photos", predicate:nil)
+        print(checkPhotos.count)
+        for dd in checkPhotos {
+            let album = dd.value(forKey: "albumId")
+            //let da = dd.value(forKey: "photo")
+            
+            print("\(album) for ")
+        }
+    }
 
     /*
     // MARK: - Navigation
