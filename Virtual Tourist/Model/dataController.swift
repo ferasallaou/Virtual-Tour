@@ -12,61 +12,58 @@ import UIKit
 
 class DataController {
     
-        let appDelegate = UIApplication.shared.delegate as? AppDelegate
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
         var managedContext: NSManagedObjectContext = NSManagedObjectContext()
         var managedObject: NSManagedObject?
     
      init(){
-        managedContext = (appDelegate?.persistentContainer.viewContext)!
+        managedContext = appDelegate.persistentContainer.viewContext
     }
     
     func getEntity(entityNamae: String) {
+
         let entity = NSEntityDescription.entity(forEntityName: entityNamae, in: managedContext)
         managedObject = NSManagedObject(entity: entity!, insertInto: managedContext)
     }
     
-    
-    func save(parameters:[String: AnyObject]?, parameterAsArray: [[String:AnyObject]]?){
-        if parameters != nil {
-            if !parameters!.isEmpty{
-                for (key, value) in parameters! {
-                    managedObject?.setValue(value, forKey: "\(key)")
-                }
-            }
-            
-            do {
-                try  managedContext.save()
-            }catch{
-                fatalError("Couldn't save :( ")
-            }
-        }
-        
-        if parameterAsArray != nil {
-            if !parameterAsArray!.isEmpty {
-                for values in parameterAsArray! {
-                    for (key, value) in values {
-                        managedObject?.setValue(value, forKey: "\(key)")
+
+    func save(parameters:[String: AnyObject]){
+            if !parameters.isEmpty{
+                if let _ = parameters["albumId"] {
+                    let album = Albums(context: managedContext)
+                    for (key, value) in parameters {
+                        album.setValue(value, forKey: "\(key)")
                     }
+
+                     //managedContext.insert(album)
+
+                    appDelegate.saveContext()
+
+                }else {
+                    for (key, value) in parameters {
+                    if let dataArray = value as? NSArray {
+
+                        for singleItem in dataArray {
+                            let photo = Photos(context: managedContext)
+                            photo.albumId = Int64(key)!
+                            photo.photo = singleItem as? Data
+                             managedContext.insert(photo)
+                        }
+
+                    }
+                    }
+                    appDelegate.saveContext()
                 }
             }
-            do {
-                try  managedContext.save()
-                print("SAVED :D ")
-            }catch{
-                fatalError("Couldn't save :( ")
-            }
-            
-        }
     }
+
     
     
-    
-    func fetchFrom(entityName: String, predicate: String?) -> [NSManagedObject]{
+    func fetchFrom(entityName: String, predicate: NSPredicate?) -> [NSManagedObject]{
         var data = [NSManagedObject]()
         let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: entityName)
         if predicate != nil {
-            let newPredicate = NSPredicate(format: "albumId = %@", argumentArray: [predicate!])
-            fetchRequest.predicate = newPredicate
+            fetchRequest.predicate = predicate
         }
         do{
          data = try managedContext.fetch(fetchRequest)

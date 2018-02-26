@@ -10,12 +10,16 @@ import UIKit
 
 class AlbumViewController: UIViewController {
 
+    @IBOutlet weak var layoutFlow: UICollectionViewFlowLayout!
     @IBOutlet weak var locationSnapshot: UIImageView!
     var locationImage =  UIImage()
-    var albumId: Int64 = 0
+    var albumId: Int64 = Int64()
     var latitude: Double = 0
     var longitude: Double = 0
+    var photosArray = [Photos]()
     
+    @IBOutlet weak var cellImage: UIImageView!
+    @IBOutlet weak var photosCollectionView: UICollectionView!
     let dataController = DataController()
     let flickrClient = FlickrClient()
 
@@ -23,21 +27,29 @@ class AlbumViewController: UIViewController {
         super.viewDidLoad()
         
         locationSnapshot.image = locationImage
-        getSavedPhotosOrFetch(albumId: albumId) 
+        getSavedPhotosOrFetch(mAlbumId: albumId)
+        adjustLayoutFlow()
         // Do any additional setup after loading the view.
     }
 
+    @IBAction func deleter(_ sender: Any) {
+           dataController.deleteAll(entityName: "Photos")
+    }
     
     @IBAction func getNewCollection(_ sender: Any) {
-       //dataController.deleteAll(entityName: "Photos")
-        let checkPhotos = dataController.fetchFrom(entityName: "Photos", predicate:nil)
-        print(checkPhotos.count)
-        for dd in checkPhotos {
-            let album = dd.value(forKey: "albumId")
-            //let da = dd.value(forKey: "photo")
-            
-            print("\(album) for ")
+        let predicate = NSPredicate(format: "albumId == %d", albumId)
+        let checkPhotos = dataController.fetchFrom(entityName: "Photos", predicate: predicate)
+        if !checkPhotos.isEmpty {
+            photosArray = []
+            for dd in checkPhotos {
+                
+                let album = dd as! Photos
+                photosArray.append(album)
+                photosCollectionView.reloadData()
+            }
         }
+      
+        
     }
 
     /*

@@ -16,9 +16,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
     let userDefaults = UserDefaults.standard
     var mainMapView: MKMapView?
+    var albumsArray = [Albums]()
+    
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+        let fetchRequest = NSFetchRequest<Albums>(entityName: "Albums")
+        let getPoints = try? persistentContainer.viewContext.fetch(fetchRequest)
+        if getPoints != nil {
+            albumsArray = getPoints!
+        }
         return true
     }
 

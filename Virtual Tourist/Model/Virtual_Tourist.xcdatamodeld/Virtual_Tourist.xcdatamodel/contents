@@ -5,13 +5,15 @@
         <attribute name="latitude" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="longitude" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="snapshot" optional="YES" attributeType="Binary" syncable="YES"/>
+        <relationship name="photo" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Photos" inverseName="albums" inverseEntity="Photos" syncable="YES"/>
     </entity>
     <entity name="Photos" representedClassName="Photos" syncable="YES" codeGenerationType="class">
         <attribute name="albumId" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="photo" optional="YES" attributeType="Binary" syncable="YES"/>
+        <relationship name="albums" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Albums" inverseName="photo" inverseEntity="Albums" syncable="YES"/>
     </entity>
     <elements>
-        <element name="Albums" positionX="-63" positionY="-18" width="128" height="105"/>
-        <element name="Photos" positionX="-63" positionY="9" width="128" height="75"/>
+        <element name="Albums" positionX="-63" positionY="-18" width="128" height="118"/>
+        <element name="Photos" positionX="-389" positionY="9" width="128" height="90"/>
     </elements>
 </model>

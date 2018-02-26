@@ -20,12 +20,13 @@ class MapViewController: UIViewController {
     let appDelegate = UIApplication.shared.delegate as! AppDelegate
     var isEditMode: Bool = false
     let dataController = DataController()
+    var gesture = UILongPressGestureRecognizer()
+
     
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "Virtual Tourist"
         getUserLocation()
-        startGestureListener()
         appDelegate.mainMapView = self.mapView
         addAnnotationsToMap()
     }
@@ -42,23 +43,23 @@ class MapViewController: UIViewController {
 //        }
         
         
-//        dataController.deleteAll(entityName: "Albums")
+        dataController.deleteAll(entityName: "Albums")
         
-        let flickrClient = FlickrClient()
-        let params = [
-            "lat": 48.453 as AnyObject,
-            "lon": -89.496 as AnyObject,
-        ]
-        let url = flickrClient.prepareParameters(params: params)
-        flickrClient.getPhotos(url: url) {
-            (data, error) in
-
-            if error != nil {
-                print(error! + "OOps")
-            }else {
-                print("got it \(data?.count)")
-            }
-        }
+//        let flickrClient = FlickrClient()
+//        let params = [
+//            "lat": 48.453 as AnyObject,
+//            "lon": -89.496 as AnyObject,
+//        ]
+//        let url = flickrClient.prepareParameters(params: params)
+//        flickrClient.getPhotos(url: url) {
+//            (data, error) in
+//
+//            if error != nil {
+//                print(error! + "OOps")
+//            }else {
+//                print("got it \(data?.count)")
+//            }
+//        }
     }
     
     @IBAction func editMapViewBtn(_ sender: Any) {
@@ -79,6 +80,16 @@ class MapViewController: UIViewController {
             
         }
         
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        startGestureListener()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        mapView.removeGestureRecognizer(gesture)
     }
     
     func getUserLocation() {

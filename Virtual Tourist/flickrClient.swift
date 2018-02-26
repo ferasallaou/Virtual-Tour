@@ -4,7 +4,6 @@
 //
 //  Created by Feras Allaou on 2/22/18.
 //  Copyright © 2018 Feras Allaou. All rights reserved.
-//
 
 import Foundation
 
@@ -17,7 +16,7 @@ class FlickrClient{
         var parametes = params
         var extraParameters = ""
         parametes["api_key"] = "ebda1d5af7e68e6adc4b224f820e3847" as AnyObject
-        parametes["per_page"] = 15 as AnyObject
+        parametes["per_page"] = 5 as AnyObject
         parametes["format"] = "json" as AnyObject
         parametes["extras"] = "url_s" as AnyObject
         parametes["nojsoncallback"] = 1 as AnyObject

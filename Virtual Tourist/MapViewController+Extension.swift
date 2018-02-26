@@ -9,9 +9,8 @@
 import Foundation
 import MapKit
 
-extension MapViewController: CLLocationManagerDelegate, MKMapViewDelegate {
+extension MapViewController: CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        print("Here")
         if let tryUserLocation = locations.last {
             
             userLocation = tryUserLocation.coordinate
@@ -33,53 +32,7 @@ extension MapViewController: CLLocationManagerDelegate, MKMapViewDelegate {
     }
     
     
-    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
-        let reuseId = "pin"
-        
-        var pinView = mapView.dequeueReusableAnnotationView(withIdentifier: reuseId) as? MKPinAnnotationView
-        
-        if pinView == nil {
-            pinView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: reuseId)
-            pinView!.canShowCallout = false
-            pinView!.pinTintColor = .red
-            pinView!.animatesDrop = true
-            pinView!.rightCalloutAccessoryView = UIButton(type: .detailDisclosure)
-        }
-        else {
-            pinView!.annotation = annotation
-        }
-        
-        return pinView
-    }
-    
-    func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
-        
-        if let annotation = view.annotation{
-            let annotationId = annotation.title!
-            if self.isEditMode {
-            let deleteRequest = dataController.deleteFrom(entityName: "Albums", fetchFormat: "albumId == \(annotationId!)")
-                if deleteRequest {
-                    self.mapView.removeAnnotation(annotation)
-                }else{
-                    showAlert(title: "Error in Deletion", message: "Please try again.   ")
-                }
-            
-            }else{
-                let albumVC = self.storyboard?.instantiateViewController(withIdentifier: "albumVC") as! AlbumViewController
-                let getData = dataController.fetchFrom(entityName: "Albums", predicate: annotationId!)
-                let imageData = getData.last?.value(forKey: "snapshot") as! Data
-                let image = UIImage(data: imageData)
-                albumVC.locationImage = image!
-                albumVC.latitude = (view.annotation?.coordinate.latitude)!
-                albumVC.longitude = (view.annotation?.coordinate.longitude)!
-                albumVC.albumId = Int64(annotation.title!!)!
-                self.navigationController?.pushViewController(albumVC, animated: true)
-            }
-            
-        }
-        
-    }
-    
+
 
     func convertDictionaryToRegion(dictionary: [String: AnyObject]) -> MKCoordinateRegion{
         let centerDictionary = dictionary["center"]
@@ -92,40 +45,12 @@ extension MapViewController: CLLocationManagerDelegate, MKMapViewDelegate {
     }
     
     func startGestureListener(){
-        let gesture = UILongPressGestureRecognizer(target: self, action: #selector(dropPin))
+        
+        gesture = UILongPressGestureRecognizer(target: self, action: #selector(dropPin))
         mapView.addGestureRecognizer(gesture)
     }
     
-    @objc func dropPin(gestureRecognizer:UIGestureRecognizer) {
-        if gestureRecognizer.state == .began {
-        let touchPoint = gestureRecognizer.location(in: mapView)
-        let newCoordinates = mapView.convert(touchPoint, toCoordinateFrom: mapView)
-        
-        let annotation = MKPointAnnotation()
-        annotation.coordinate = newCoordinates
-        annotation.title = "\(Int(Date().timeIntervalSince1970))"
-            let albumId = Int(annotation.title!)
-            dataController.getEntity(entityNamae: "Albums")
-            var imageData = Data()
-            createSnapShot(location: newCoordinates) {
-                (data, error) in
-                
-                if error != nil {
-                    print("Just an error")
-                }else {
-                self.mapView.addAnnotation(annotation)
-                  imageData = data!
-                    let parameters = ["albumId": albumId! as AnyObject,
-                                      "snapshot": imageData as AnyObject,
-                                      "latitude": newCoordinates.latitude as AnyObject,
-                                      "longitude": newCoordinates.longitude as AnyObject
-                    ]
-                    self.dataController.save(parameters: parameters, parameterAsArray: nil)
-                    
-                }
-            }
-        }
-    }
+
     
     func createSnapShot(location: CLLocationCoordinate2D, createSSCompletion: @escaping (Data?, String?) -> Void)  {
         var snapshotImg = UIImage()
@@ -186,22 +111,7 @@ extension MapViewController: CLLocationManagerDelegate, MKMapViewDelegate {
     }
     
     
-    func addAnnotationsToMap()  {
-        let myData = dataController.fetchFrom(entityName: "Albums",predicate:  nil)
-        var mapAnnot = [MKAnnotation]()
-        for savedPins in myData{
-            let lat = savedPins.value(forKey: "latitude") as! Double
-            let long = savedPins.value(forKey: "longitude") as! Double
-            let title = savedPins.value(forKey: "albumId") as! Int64
-            let annotation = MKPointAnnotation()
-            annotation.coordinate = CLLocationCoordinate2D(latitude: lat, longitude: long)
-            annotation.title = "\(title)"
-            mapAnnot.append(annotation)
-        }
-        
-        self.mapView.addAnnotations(mapAnnot)
-    }
-    
+
     
     
 }

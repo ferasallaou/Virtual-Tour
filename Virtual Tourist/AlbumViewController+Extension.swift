@@ -7,57 +7,86 @@
 //
 
 import Foundation
-
+import UIKit
 
 extension AlbumViewController {
     
-    func getSavedPhotosOrFetch(albumId: Int64) {
-    
-       let getPhotos =  dataController.fetchFrom(entityName: "Photos", predicate: "albumId == \(albumId)")
+    func getSavedPhotosOrFetch(mAlbumId: Int64) {
         
-        if getPhotos.isEmpty {
-            print("There are no photos indeed :( for \(latitude) - \(longitude)")
-            let params = [
-                "lat": latitude as AnyObject,
-                "lon": longitude as AnyObject
-            ]
+        print("Gona Fetch For \(mAlbumId)")
+        
+        let getPredicate = NSPredicate(format: "albumId == %@", argumentArray: [mAlbumId])
+        let tryToFetch = dataController.fetchFrom(entityName: "Photos", predicate: getPredicate)
+        var photosDataArray = [Data]()
+        if tryToFetch.isEmpty {
+            // let's get somephotos and save them to our database :)
+            
+            let params = ["lat": latitude as AnyObject,
+                          "lon": longitude as AnyObject]
             let url = flickrClient.prepareParameters(params: params)
-
-            flickrClient.getPhotos(url: url){
-                (data, error) in
+            
+            flickrClient.getPhotos(url: url) {
+                (flickrPhotos, error) in
                 
                 guard error == nil else {
-                    print("There was an error! \(error)")
+                    print("Oops \(error!)")
                     return
                 }
                 
-                if data!.isEmpty {
-                    print("Flickr has no Photos :(( ")
-                }else{
-                    self.dataController.getEntity(entityNamae: "Photos")
-                    print("We Have \(data!.count)")
-                    var counter = 1
-                    var dataToSave: [[String: AnyObject]] = []
-                    for flickrPhotos in data! {
-                        print("Saving \(counter)")
-                        let photoURL = flickrPhotos["url_s"] as! String
-                        let imgData = try? Data(contentsOf: URL(string: photoURL)!)
+                for singlePhoto in flickrPhotos! {
+                  let photoURL = singlePhoto["url_s"] as? String
+                    self.getImageDataFromUrl(url: photoURL!){
+                        (convertedPhoto, errorPhoto) in
                         
-                         let dataObject = [
-                            "albumId": self.albumId as AnyObject,
-                            "photo": imgData! as AnyObject
-                        ]
-                        dataToSave.append(dataObject)
-                        counter += 1
+                        
+                        guard errorPhoto == nil else{
+                            print("No Photo Data were returned.")
+                            return
+                        }
+                     
+                        photosDataArray.append(convertedPhoto!)
                     }
-                    
-                    self.dataController.save(parameters: nil, parameterAsArray: dataToSave)
+                }
+                
+                // Now we got our Photos in Data Format, let's save it to the Datbase :)
+                let dataToSave = [
+                    "\(mAlbumId)": photosDataArray as AnyObject
+                ]
+                self.dataController.save(parameters: dataToSave)
+
+            }
+            
+        } else { // end of TryToFetch is Empty
+            print("We have photos for \(mAlbumId)")
+            
+            for singleItem in tryToFetch {
+                print(singleItem.value(forKey: "albumId"))
+            }
+            
+        }
+
+    }
+
+        func getImageDataFromUrl(url: String, completionHandler: @escaping (Data?, String?)-> Void) {
+            
+            if let mUrl = URL(string: url) {
+                do {
+                let imageData = try Data(contentsOf: mUrl)
+                completionHandler(imageData,nil)
+                }catch{
+                    completionHandler(nil, "Couldn't Download Image")
                 }
             }
-        }else{
-            print("Well, let's Print the photos")
-        }
     }
     
+    func adjustLayoutFlow(){
+        let space:CGFloat = 3
+        let mHeight = (view.frame.size.height - (2 * space))
+        let mWidth = (view.frame.size.width - (2 * space))
+        
+        layoutFlow?.minimumInteritemSpacing = space
+        layoutFlow?.minimumLineSpacing = space
+        layoutFlow?.itemSize = CGSize(width: mWidth/3, height: mHeight/5)
+    }
     
 }
