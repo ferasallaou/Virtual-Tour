@@ -37,24 +37,28 @@ extension MapViewController: MKMapViewDelegate {
 
             let annotationId = annotation.title!
             if self.isEditMode {
-                let deleteRequest = dataController.deleteFrom(entityName: "Albums", fetchFormat: "albumId == \(annotationId!)")
+                let predicate = NSPredicate(format: "albumId == %@", annotationId!)
+                let deleteRequest = dataController.deleteFrom(entityName: "Albums", fetchFormat: predicate)
                 if deleteRequest {
                     self.mapView.removeAnnotation(annotation)
+                    let deletePredicate = NSPredicate(format: "albumId == %@", annotationId!)
+                    let deletePhotos = self.dataController.deleteFrom(entityName: "Photos", fetchFormat: deletePredicate)
+                    if !deletePhotos {
+                        showAlert(title: "Error in Deletion", message: "There was an Error deleting all Photos Associated!")
+                    }
                 }else{
-                    showAlert(title: "Error in Deletion", message: "Please try again.   ")
+                    showAlert(title: "Error in Deletion", message: "Please try again.")
                 }
                 
             }else{
                 let albumVC = self.storyboard?.instantiateViewController(withIdentifier: "albumVC") as! AlbumViewController
-                let getPredicate = NSPredicate(format: "albumId == %@", annotationId!)
-                let getData = dataController.fetchFrom(entityName: "Albums", predicate: getPredicate)
-                let imageData = getData.last?.value(forKey: "snapshot") as! Data
-                let image = UIImage(data: imageData)
-                albumVC.locationImage = image!
+                                
                 albumVC.latitude = (view.annotation?.coordinate.latitude)!
                 albumVC.longitude = (view.annotation?.coordinate.longitude)!
                 albumVC.albumId = Int64(annotation.title!!)!
+                self.mapView.deselectAnnotation(annotation, animated: false)
                 self.navigationController?.pushViewController(albumVC, animated: true)
+                
             }
             
         }
@@ -72,34 +76,21 @@ extension MapViewController: MKMapViewDelegate {
             annotation.title = "\(Int(Date().timeIntervalSince1970))"
             let albumId = Int(annotation.title!)
             //dataController.getEntity(entityNamae: "Albums")
-            var imageData = Data()
-            createSnapShot(location: newCoordinates) {
-                (data, error) in
-                if error != nil {
-                    print("Just an error")
-                }else{
-                    
-                    self.mapView.addAnnotation(annotation)
-                    imageData = data!
-                    let parameters = ["albumId": albumId! as AnyObject,
-                                      "snapshot": imageData as AnyObject,
-                                      "latitude": newCoordinates.latitude as AnyObject,
-                                      "longitude": newCoordinates.longitude as AnyObject
-                    ]
-                    self.dataController.save(parameters: parameters)
-                    
-                }
-            }
+            self.mapView.addAnnotation(annotation)
+
+            let parameters = ["albumId": albumId! as AnyObject,
+                              "latitude": newCoordinates.latitude as AnyObject,
+                              "longitude": newCoordinates.longitude as AnyObject
+            ]
+            
+            self.dataController.saveAlbum(parameters: parameters)
+            
         }
     }
    
     func addAnnotationsToMap()  {
         
         let albumsData = appDelegate.albumsArray
-        print(albumsData.count)
-        for sd in albumsData {
-            print("\(sd.albumId) - \(sd.latitude) - \(sd.longitude)")
-        }
         var mapAnnot = [MKAnnotation]()
         for savedPins in albumsData{
             let lat = savedPins.latitude

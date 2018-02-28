@@ -49,69 +49,6 @@ extension MapViewController: CLLocationManagerDelegate {
         gesture = UILongPressGestureRecognizer(target: self, action: #selector(dropPin))
         mapView.addGestureRecognizer(gesture)
     }
-    
-
-    
-    func createSnapShot(location: CLLocationCoordinate2D, createSSCompletion: @escaping (Data?, String?) -> Void)  {
-        var snapshotImg = UIImage()
-        //var imageAsData = Data()
-        let mapSnapshotOptions = MKMapSnapshotOptions()
         
-        // Set the region of the map that is rendered.
-        
-        let mLocation = CLLocationCoordinate2DMake(location.latitude, location.longitude)
-        let region = MKCoordinateRegionMakeWithDistance(mLocation, 1000, 1000)
-        mapSnapshotOptions.region = region
-        
-        // Set the scale of the image. We'll just use the scale of the current device, which is 2x scale on Retina screens.
-        mapSnapshotOptions.scale = UIScreen.main.scale
-        
-        // Set the size of the image output.
-        mapSnapshotOptions.size = CGSize(width: 600, height: 300)
-        
-        // Show buildings and Points of Interest on the snapshot
-        mapSnapshotOptions.showsBuildings = true
-        mapSnapshotOptions.showsPointsOfInterest = true
-        
-        let snapShotter = MKMapSnapshotter(options: mapSnapshotOptions)
-        snapShotter.start { (snapshot, error) in
-            
-        guard  error == nil else {
-                createSSCompletion(nil, "There was an Error Creating a Snapshot")
-                return
-            }
-            
-            if let image = snapshot?.image {
-                snapshotImg =  image
-            }
-
-            UIGraphicsBeginImageContextWithOptions(snapshotImg.size, true, snapshotImg.scale)
-            snapshotImg.draw(at: CGPoint.zero)
-            let pin = MKPinAnnotationView(annotation: nil, reuseIdentifier: nil)
-
-            let visibleRect = CGRect(origin: CGPoint.zero, size: snapshotImg.size)
-
-            var point = snapshot?.point(for: mLocation)
-                if visibleRect.contains(point!) {
-                    point!.x = point!.x + pin.centerOffset.x - (pin.bounds.size.width / 2)
-                    point!.y = point!.y + pin.centerOffset.y - (pin.bounds.size.height / 2)
-                    pin.image?.draw(at: point!)
-                }
-            
-            
-            let compositeImage = UIGraphicsGetImageFromCurrentImageContext()
-            UIGraphicsEndImageContext()
-            
-            let data = UIImageJPEGRepresentation(compositeImage!, 1)
-            
-            
-             //imageAsData = UIImageJPEGRepresentation(snapshotImg, 1)!
-            createSSCompletion(data,nil)
-        }
-    }
-    
-    
-
-    
     
 }

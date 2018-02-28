@@ -16,7 +16,7 @@ class FlickrClient{
         var parametes = params
         var extraParameters = ""
         parametes["api_key"] = "ebda1d5af7e68e6adc4b224f820e3847" as AnyObject
-        parametes["per_page"] = 5 as AnyObject
+        parametes["per_page"] = 15 as AnyObject
         parametes["format"] = "json" as AnyObject
         parametes["extras"] = "url_s" as AnyObject
         parametes["nojsoncallback"] = 1 as AnyObject
@@ -31,7 +31,6 @@ class FlickrClient{
     }
     
     func makeGetRequest(url: String, getRequestCompltionHandler: @escaping ( [String: AnyObject]? , String? ) -> Void ) {
-        
         let mUrl = URL(string: url)
         let request = URLRequest(url: mUrl!)
         
@@ -40,7 +39,7 @@ class FlickrClient{
             
             
             guard error == nil else {
-                getRequestCompltionHandler(nil, "Got an Error \(String(describing: error?.localizedDescription))")
+                getRequestCompltionHandler(nil, " \(String(describing: error!.localizedDescription))")
                 return
             }
             
@@ -87,9 +86,12 @@ class FlickrClient{
             
             if let response = response {
                 let totalPages = response["pages"] as? Int ?? 1
-                let randomPageNumber = Int(arc4random_uniform(UInt32(totalPages)) + 1)
+                var randomPageNumber = Int(arc4random_uniform(265) + 1)
                 
-
+                while randomPageNumber > totalPages {
+                    randomPageNumber = Int(arc4random_uniform(265) + 1)
+                }
+                
                 if randomPageNumber == 1 {
                     
                     guard let photoObject = response["photo"] as? [AnyObject] else {

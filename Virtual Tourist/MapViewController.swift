@@ -31,36 +31,6 @@ class MapViewController: UIViewController {
         addAnnotationsToMap()
     }
     
-    @IBAction func testing(_ sender: Any) {
-//     let myData = dataController.fetchFrom(entityName: "Albums",predicate:  nil)
-//        print("we have \(myData.count)")
-//        for d in myData{
-//            let toInt = d.value(forKey: "albumId") as! Int64
-//            let imageData = d.value(forKey: "snapshot") as? Data
-//            let lat = d.value(forKey: "latitude") as? Double
-//            let long = d.value(forKey: "longitude") as? Double
-//            //print( " \(toInt) thisis data \(imageData) && \(lat) - \(long)")
-//        }
-        
-        
-        dataController.deleteAll(entityName: "Albums")
-        
-//        let flickrClient = FlickrClient()
-//        let params = [
-//            "lat": 48.453 as AnyObject,
-//            "lon": -89.496 as AnyObject,
-//        ]
-//        let url = flickrClient.prepareParameters(params: params)
-//        flickrClient.getPhotos(url: url) {
-//            (data, error) in
-//
-//            if error != nil {
-//                print(error! + "OOps")
-//            }else {
-//                print("got it \(data?.count)")
-//            }
-//        }
-    }
     
     @IBAction func editMapViewBtn(_ sender: Any) {
         if isEditMode {

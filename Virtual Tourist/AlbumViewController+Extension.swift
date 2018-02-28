@@ -8,17 +8,23 @@
 
 import Foundation
 import UIKit
+import MapKit
 
-extension AlbumViewController {
+extension AlbumViewController{
     
     func getSavedPhotosOrFetch(mAlbumId: Int64) {
+       // self.photosCollectionView.addSubview(self.activityIndicator)
+
+        photosCollectionView.isHidden = true
+        self.activityIndicator.isHidden = false
+        self.activityIndicator.startAnimating()
         
-        print("Gona Fetch For \(mAlbumId)")
-        
+        self.newCollectionBtn.isEnabled = false
         let getPredicate = NSPredicate(format: "albumId == %@", argumentArray: [mAlbumId])
         let tryToFetch = dataController.fetchFrom(entityName: "Photos", predicate: getPredicate)
-        var photosDataArray = [Data]()
+
         if tryToFetch.isEmpty {
+            
             // let's get somephotos and save them to our database :)
             
             let params = ["lat": latitude as AnyObject,
@@ -33,34 +39,47 @@ extension AlbumViewController {
                     return
                 }
                 
+                self.photosArray = []
                 for singlePhoto in flickrPhotos! {
                   let photoURL = singlePhoto["url_s"] as? String
                     self.getImageDataFromUrl(url: photoURL!){
                         (convertedPhoto, errorPhoto) in
-                        
-                        
+
                         guard errorPhoto == nil else{
                             print("No Photo Data were returned.")
                             return
                         }
-                     
-                        photosDataArray.append(convertedPhoto!)
+                        
+                        let newPhotoObject = Photos(context: self.dataController.managedContext)
+                        newPhotoObject.albumId = mAlbumId
+                        newPhotoObject.photo = convertedPhoto!
+                    
+                        self.dataController.savePhoto(parameters: newPhotoObject)
+                        self.photosArray.append(newPhotoObject)
                     }
                 }
                 
-                // Now we got our Photos in Data Format, let's save it to the Datbase :)
-                let dataToSave = [
-                    "\(mAlbumId)": photosDataArray as AnyObject
-                ]
-                self.dataController.save(parameters: dataToSave)
-
+          
+                DispatchQueue.main.async {
+                    self.photosCollectionView.reloadData()
+                    self.newCollectionBtn.isEnabled = true
+                    self.photosCollectionView.isHidden = false
+                    self.activityIndicator.isHidden = true
+                    self.activityIndicator.stopAnimating()
+                }
+             
             }
             
         } else { // end of TryToFetch is Empty
-            print("We have photos for \(mAlbumId)")
-            
-            for singleItem in tryToFetch {
-                print(singleItem.value(forKey: "albumId"))
+
+            self.photosArray = []
+            self.photosArray = tryToFetch as! [Photos]
+            DispatchQueue.main.async {
+                self.photosCollectionView.reloadData()
+                self.newCollectionBtn.isEnabled = true
+                self.photosCollectionView.isHidden = false
+                self.activityIndicator.isHidden = true
+                self.activityIndicator.stopAnimating()
             }
             
         }
@@ -88,5 +107,7 @@ extension AlbumViewController {
         layoutFlow?.minimumLineSpacing = space
         layoutFlow?.itemSize = CGSize(width: mWidth/3, height: mHeight/5)
     }
+    
+
     
 }

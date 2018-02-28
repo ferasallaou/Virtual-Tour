@@ -27,34 +27,20 @@ class DataController {
     }
     
 
-    func save(parameters:[String: AnyObject]){
+    func saveAlbum(parameters:[String: AnyObject]){
             if !parameters.isEmpty{
-                if let _ = parameters["albumId"] {
-                    let album = Albums(context: managedContext)
-                    for (key, value) in parameters {
-                        album.setValue(value, forKey: "\(key)")
+                        let album = Albums(context: managedContext)
+                        for (key, value) in parameters {
+                            album.setValue(value, forKey: "\(key)")
                     }
-
-                     //managedContext.insert(album)
-
-                    appDelegate.saveContext()
-
-                }else {
-                    for (key, value) in parameters {
-                    if let dataArray = value as? NSArray {
-
-                        for singleItem in dataArray {
-                            let photo = Photos(context: managedContext)
-                            photo.albumId = Int64(key)!
-                            photo.photo = singleItem as? Data
-                             managedContext.insert(photo)
-                        }
-
-                    }
-                    }
-                    appDelegate.saveContext()
-                }
+                        appDelegate.saveContext()
             }
+    }
+    
+    
+    func savePhoto(parameters: Photos) {
+        managedContext.insert(parameters)
+        appDelegate.saveContext()
     }
 
     
@@ -73,35 +59,19 @@ class DataController {
         return data
     }
     
-    func deleteFrom(entityName: String, fetchFormat: String) -> Bool{
-        print("got the sdelete \(fetchFormat)")
+    func deleteFrom(entityName: String, fetchFormat: NSPredicate) -> Bool{
        let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: entityName)
-        fetchRequest.predicate = NSPredicate.init(format: fetchFormat)
+        fetchRequest.predicate = fetchFormat
         let request = NSBatchDeleteRequest(fetchRequest: fetchRequest as! NSFetchRequest<NSFetchRequestResult>)
         let result = try? managedContext.execute(request)
         
-        if let result = result {
+        if let _ = result {
             return true
         } else {
             return false
             }
         }
     
-    
-    func deleteAll(entityName: String) {
-        let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: entityName)
-        let request = NSBatchDeleteRequest(fetchRequest: fetchRequest as! NSFetchRequest<NSFetchRequestResult>)
-        let result = try? managedContext.execute(request)
-
-        if let result = result {
-            print("OK \(result)")
-        }else{
-            
-            print("Nope")
-        }
-
-        
-    }
     
 }
 

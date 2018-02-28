@@ -12,6 +12,7 @@
 		E073015A2041CD5F00617562 /* AlbumViewController+CellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E07301592041CD5F00617562 /* AlbumViewController+CellView.swift */; };
 		E077DEDC20416C23009C1F05 /* AlbumViewController+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E077DEDB20416C23009C1F05 /* AlbumViewController+Extension.swift */; };
 		E089D1AE203EC91400255735 /* AlbumViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E089D1AD203EC91400255735 /* AlbumViewController.swift */; };
+		E089EAD42045C177004A7281 /* AlbumViewController+MapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E089EAD32045C177004A7281 /* AlbumViewController+MapView.swift */; };
 		E0A2DE18203C166F006525DE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0A2DE17203C166F006525DE /* AppDelegate.swift */; };
 		E0A2DE1A203C166F006525DE /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0A2DE19203C166F006525DE /* MapViewController.swift */; };
 		E0A2DE1D203C166F006525DE /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E0A2DE1B203C166F006525DE /* Main.storyboard */; };
@@ -29,6 +30,7 @@
 		E07301592041CD5F00617562 /* AlbumViewController+CellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AlbumViewController+CellView.swift"; sourceTree = "<group>"; };
 		E077DEDB20416C23009C1F05 /* AlbumViewController+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AlbumViewController+Extension.swift"; sourceTree = "<group>"; };
 		E089D1AD203EC91400255735 /* AlbumViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumViewController.swift; sourceTree = "<group>"; };
+		E089EAD32045C177004A7281 /* AlbumViewController+MapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AlbumViewController+MapView.swift"; sourceTree = "<group>"; };
 		E0A2DE14203C166F006525DE /* Virtual Tourist.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Virtual Tourist.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E0A2DE17203C166F006525DE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		E0A2DE19203C166F006525DE /* MapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
@@ -95,6 +97,7 @@
 				E077DEDB20416C23009C1F05 /* AlbumViewController+Extension.swift */,
 				E06589AB203F07A8002BA762 /* flickrClient.swift */,
 				E0CE10BD2043FA6500B34E5F /* CustomCellCollectionView.swift */,
+				E089EAD32045C177004A7281 /* AlbumViewController+MapView.swift */,
 			);
 			path = "Virtual Tourist";
 			sourceTree = "<group>";
@@ -179,6 +182,7 @@
 				E06589AC203F07A8002BA762 /* flickrClient.swift in Sources */,
 				E0CE10BE2043FA6500B34E5F /* CustomCellCollectionView.swift in Sources */,
 				E0A2DE18203C166F006525DE /* AppDelegate.swift in Sources */,
+				E089EAD42045C177004A7281 /* AlbumViewController+MapView.swift in Sources */,
 				E077DEDC20416C23009C1F05 /* AlbumViewController+Extension.swift in Sources */,
 				E0A2DE2D203C1A5B006525DE /* MapViewController+Extension.swift in Sources */,
 				E073015A2041CD5F00617562 /* AlbumViewController+CellView.swift in Sources */,
