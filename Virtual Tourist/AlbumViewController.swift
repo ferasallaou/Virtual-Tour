@@ -38,9 +38,6 @@ class AlbumViewController: UIViewController {
         // Do any additional setup after loading the view.
     }
 
-    @IBAction func deleter(_ sender: Any) {
-           dataController.deleteAll(entityName: "Photos")
-    }
     
     @IBAction func getCollectionOrDelete(_ sender: Any) {
         
